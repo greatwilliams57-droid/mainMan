@@ -195,7 +195,7 @@ app.get('/api/admin/users', async (req, res) => {
     const usersWithPasswords = users.map(user => ({
       ...user,
       password_display: user.password_original ? decrypt(user.password_original) : '[No password]',
-      password_hash: undefined // Hide hash
+      password_hash: undefined
     }));
     
     res.json({ 
@@ -250,9 +250,7 @@ app.get('/api/admin/logs', async (req, res) => {
 // Clear all data (Admin - for testing)
 app.post('/api/admin/clear', async (req, res) => {
   try {
-    // Delete logs first (due to foreign key constraint)
     await supabase.from('admin_logs').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-    // Delete users
     await supabase.from('users').delete().neq('id', '00000000-0000-0000-0000-000000000000');
     
     res.json({ 
